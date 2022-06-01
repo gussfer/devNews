@@ -4,6 +4,7 @@ import {useNavigation} from "@react-navigation/native"
 import Icon from "react-native-vector-icons/FontAwesome5"
 import api from '../../services/api';
 import CategoryItem from "../../components/CategoryItem"
+import {getFavorite, setFavorite} from "../../services/favorite"
 
 
 
@@ -11,29 +12,39 @@ import CategoryItem from "../../components/CategoryItem"
 export default function Home() {
     const nav = useNavigation();
     const [categories, setCategories] = useState([])
+    //armazena req get(categories)
     useEffect(() => {
-        async function loadData() {
+       async function loadData() {
             const category = await api.get("/api/categories?populate=icon")
             setCategories(category.data.data)
         }
         loadData();
     }, [])
+
+    //favoritando categoria
+   async function handleFavorite(id) {
+        const response = await setFavorite(id)
+        console.log(response);
+        alert("Categoria Favritada!" + id)
+    }
+
     return(
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.name}>DevNews!</Text>
-                <TouchableOpacity>
-                    <Icon name="search" style={styles.name} onPress={() => nav.navigate("Search")}/>
+                <TouchableOpacity onPress={() => nav.navigate("Search")}>
+                    <Icon name="search" style={styles.name}/>
                 </TouchableOpacity>
             </View>
             <View style={styles.categories}>
                 <FlatList
-                    style={styles.cards}
+                    horizontal={true}
                     data={categories}
                     keyExtractor={(item) => String(item.id)}
                     renderItem={({item}) => (
                         <CategoryItem
                             data={item}
+                            favorite={() => handleFavorite(item.id)}
                         />
                     )}
                 />
@@ -60,7 +71,7 @@ export default function Home() {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'whitesmoke',
+        backgroundColor: '#EFEFEF',
         flex: 1,
     },
     header:{
@@ -76,16 +87,15 @@ const styles = StyleSheet.create({
         top: -70,
         height: 110,
         marginHorizontal: 15,
-        borderRadius: 5,
+        borderRadius: 8,
     },
     cards:{
-        flexDirection: 'row',
         backgroundColor: "#EFEFEF",
         top: 10,
         height: 90,
-        width: 90,
+        width: 10,
         borderRadius: 5,
-        marginHorizontal: 15,
+        marginHorizontal: 50,
     },
     title:{
         marginHorizontal: 30,
