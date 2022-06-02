@@ -6,7 +6,7 @@ import {NavigationContainer} from "@react-navigation/native"
 export default function App() {
   return (
     <NavigationContainer>
-      <StatusBar backgroundColor="#023047" barStyle='light-content'/>
+      <StatusBar backgroundColor="#023047" barStyle='ligh-content'/>
       <Routes/>
     </NavigationContainer>
   );

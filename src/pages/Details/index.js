@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     title:{
-        color: 'black',
+        color: '#023047',
         fontSize: 20,
         fontWeight: 'bold',
       }

@@ -4,6 +4,8 @@ import {useNavigation} from "@react-navigation/native"
 import Icon from "react-native-vector-icons/FontAwesome5"
 import api from '../../services/api';
 import CategoryItem from "../../components/CategoryItem"
+import PostsItem from "../../components/PostsItem"
+import FavoritePosts from "../../components/FavoritePosts" 
 import {getFavorite, setFavorite} from "../../services/favorite"
 
 
@@ -11,21 +13,38 @@ import {getFavorite, setFavorite} from "../../services/favorite"
 
 export default function Home() {
     const nav = useNavigation();
-    const [categories, setCategories] = useState([])
-    //armazena req get(categories)
+    const [categories, setCategories] = useState([]) //armazena informações das categorias
+    const [favCategory, setFavCategory] = useState([])//armazena informações das categorias favoritadas
+    const [posts, setPosts] = useState([])//armazena informações dos posts
+
+    
     useEffect(() => {
        async function loadData() {
+           await getPostsList() //retorna a busca de posts ao carregar a página
             const category = await api.get("/api/categories?populate=icon")
-            setCategories(category.data.data)
+            setCategories(category.data.data) //armazena req get(categories)
         }
         loadData();
     }, [])
+    
+    useEffect(() => {
+        async function favorite() {
+             const response = await getFavorite()
+             setFavCategory(response) //armazena categorias favoritadas
+         }
+         favorite();
+     }, [])
+
+     //buscando posts
+    async function getPostsList() {
+        const response = await api.get(`api/posts?populate=cover&sort=createdAt:desc`)//ordena get pela mais recente
+        setPosts(response.data.data)
+    }
 
     //favoritando categoria
    async function handleFavorite(id) {
         const response = await setFavorite(id)
-        console.log(response);
-        alert("Categoria Favritada!" + id)
+        setFavCategory(response);
     }
 
     return(
@@ -49,67 +68,74 @@ export default function Home() {
                     )}
                 />
             </View>
-            <Text style={styles.title}>Conteúdos em alta</Text>
-            <View style={styles.button}>
-                <Button
-                    title="Go to CategoryPosts"
-                    onPress={() => nav.navigate("CategoryPosts")}
-                    color="#023047"
-                />
-            </View>
-            <View style={styles.button}>
-                <Button
-                    title="Go to Details"
-                    onPress={() => nav.navigate("Details")}
-                    color="#023047"
-                />
-            </View>
-            
+            <View style={styles.main}>
+                {favCategory.length !== 0 && (
+                    <FlatList 
+                        style={{marginTop: 50, maxHeight: 165, paddingStart:12, borderRadius: 6}}
+                        contentContainerStyle={{paddingEnd:20}}
+                        data={favCategory}
+                        horizontal={true}
+                        keyExtractor={(item) => String(item.id)}
+                        renderItem={({item}) => 
+                            <FavoritePosts 
+                                data={item}/>
+                            }
+                        />
+                )}
+                <Text 
+                    style={[styles.title,{marginTop: favCategory.length > 0 ? 14: 60}]}>Categorias em alta</Text>
+                    <FlatList
+                        styles={{flex:1}}
+                        data={posts}
+                        keyExtractor={(item) => String(item.id)}
+                        renderItem={({item}) => <PostsItem data={item}/>}
+                    />
+            </View>                        
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#EFEFEF',
+        backgroundColor: '#023047',
         flex: 1,
     },
     header:{
-        backgroundColor: "#023047",
         flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'space-between',
-        height: 150,
+        marginHorizontal: 18,
+        marginBottom: 10,
     },
     categories:{
         backgroundColor: "#9BC4CB",
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        top: -70,
-        height: 110,
-        marginHorizontal: 15,
+        maxHeight:115,
+        height: 150,
+        marginHorizontal: 12,
         borderRadius: 8,
+        zIndex:9,
     },
-    cards:{
+    main:{
         backgroundColor: "#EFEFEF",
-        top: 10,
-        height: 90,
-        width: 10,
-        borderRadius: 5,
-        marginHorizontal: 50,
+        flex: 1,
+        marginTop: -40
     },
     title:{
-        marginHorizontal: 30,
-        fontSize: 18,
+        paddingHorizontal: 12,
+        marginTop: 40,
+        marginBottom: 12,
+        fontSize: 21,
         fontWeight: 'bold',
-        top: -40,
+        color: '#023047'
     },
     name:{
-        top: 10,
+        top: 5,
         color: '#9BC4CB',
         fontSize: 24,
         fontWeight: 'bold',
         margin: 14,
-        marginHorizontal: 20
+        marginHorizontal: 10,
+        fontFamily: 'Helvetica'
       },
     button:{
         top: -40,

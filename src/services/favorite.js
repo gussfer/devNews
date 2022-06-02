@@ -9,7 +9,7 @@ export async function getFavorite(){
         const response = await api.get(`api/categories/${data}?fields=name&populate=posts,posts.cover`)
         return response.data?.data?.attributes?.posts?.data
     }else{
-        return "teste";
+        return [];
     }
 }
 

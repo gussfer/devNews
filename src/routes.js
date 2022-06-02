@@ -25,7 +25,7 @@ function Routes(){
                     title: "Detalhes do Post",
                     headerTintColor: "#9BC4CB",
                     headerStyle:{
-                        backgroundColor: '#001427'
+                        backgroundColor: '#023047'
                     }
                 }}
              />
@@ -36,7 +36,7 @@ function Routes(){
                     title: "Categorias",
                     headerTintColor: "#9BC4CB",
                     headerStyle:{
-                        backgroundColor: '#001427'
+                        backgroundColor: '#023047'
                     }
                 }}
             />
@@ -47,7 +47,7 @@ function Routes(){
                     title: "Página de pesquisa",
                     headerTintColor: "#9BC4CB",
                     headerStyle:{
-                        backgroundColor: '#001427'
+                        backgroundColor: '#023047'
                     }
                 }}
             />
