@@ -17,7 +17,7 @@ export default function FavoritePosts({data}){
             onPress={handleNavigate}          
         >
             <ImageBackground
-                source={{uri: `http://192.168.0.15:1337${data?.attributes?.cover?.data?.attributes?.url}`}}
+                source={{uri: `http://172.20.10.4:1337${data?.attributes?.cover?.data?.attributes?.url}`}}
                 style={styles.cover}
                 resizeMode="cover"
                 blurRadius={1}

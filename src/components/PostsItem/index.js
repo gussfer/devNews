@@ -1,13 +1,23 @@
 import React from 'react';
 import {View, Text, StyleSheet, Button, SafeAreaView, TouchableOpacity, Image} from 'react-native'
+import {useNavigation} from "@react-navigation/native"
 
 export default function PostsItem({data}) {
+    const nav = useNavigation();
+    function handleDetails(){
+        nav.navigate("Details", {id: data?.id})
+    }
+
     return(
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity 
+            style={styles.container}
+            onPress={handleDetails}
+            >
             <View style={styles.header}>
                 <Image
                     style={styles.cover}
-                    source={{uri: `http://192.168.0.15:1337${data?.attributes?.cover?.data?.attributes?.url}`}}
+                    source={{uri: `http://172.20.10.4:1337${data?.attributes?.cover?.data?.attributes?.url}`}}
+
                 />
             </View>
             <View style={styles.body}>
@@ -36,8 +46,19 @@ const styles = StyleSheet.create({
     cover:{
         width: 90,
         height: 90,
+        borderRadius:5,
+        opacity:0.6
     },
     body:{
         width:'70%'
+    },
+    text:{
+        fontWeight:'bold',
+        fontSize:14,
+        marginBottom: 8,
+    },
+    description:{
+        fontSize:13,
+        lineHeight:16
     }
 })

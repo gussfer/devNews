@@ -83,7 +83,7 @@ export default function Home() {
                         />
                 )}
                 <Text 
-                    style={[styles.title,{marginTop: favCategory.length > 0 ? 14: 60}]}>Categorias em alta</Text>
+                    style={[styles.title,{marginTop: favCategory.length > 0 ? 14: 60}]}>Conteúdos em alta</Text>
                     <FlatList
                         styles={{flex:1}}
                         data={posts}
