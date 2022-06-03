@@ -1,9 +1,10 @@
 import React, {useEffect, useState, useLayoutEffect} from 'react';
-import {View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, ScrollView, Share} from 'react-native'
+import {View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, ScrollView, Share, Modal} from 'react-native'
 import {useNavigation, useRoute} from "@react-navigation/native"
 import api from "../../services/api"
 import Icon from "react-native-vector-icons/FontAwesome5"
 import Icon1 from "react-native-vector-icons/Fontisto"
+import LinkWeb from "../../components/LinkWeb"
 
 
 export default function Details() {
@@ -12,6 +13,8 @@ export default function Details() {
 
     const [posts, setPosts] = useState({})//armazena informações de um post
     const [links, setLinks] = useState([])
+    const [modalVisible, setModalVisible] = useState(false)//abre o modal
+    const [openLink, setOpenLink] = useState({})// armazena link clicado no post
 
 
     useEffect(() => {
@@ -38,9 +41,7 @@ export default function Details() {
             const result = await Share.share({
                 message: `
                 Confira este post: ${posts?.attributes?.Title}
-
                 ${posts?.attributes?.Description}
-
                 Vi lá np app DevNews!
                 `
             })
@@ -57,8 +58,9 @@ export default function Details() {
             console.log("Error")
         }
     }
-    function handleOpenLink(){
-        
+    function handleOpenLink(link){
+        setModalVisible(true)//altera o modal visible para true, abrindo o modal
+        setOpenLink(link)//openLink recebe o link clicado
     }
 
 
@@ -67,7 +69,7 @@ export default function Details() {
             <Image 
                 resizeMode='cover'
                 style={styles.cover}
-                source={{uri: `http://172.20.10.4:1337${posts?.attributes?.cover?.data?.attributes?.url}`}}
+                source={{uri: `http://192.168.0.15:1337${posts?.attributes?.cover?.data?.attributes?.url}`}}
             />
             <ScrollView style={styles.content}>
                 <Text style={styles.title}>{posts?.attributes?.Title}</Text>
@@ -77,7 +79,7 @@ export default function Details() {
                     <TouchableOpacity 
                         key={link.id} 
                         style={styles.linkIcon}
-                        onPress={() => handleOpenLink()}
+                        onPress={() => handleOpenLink(link)}
                     >
                             
                         <Icon name="link" color={"#9BC4CB"} size={14}/>
@@ -85,7 +87,16 @@ export default function Details() {
                     </TouchableOpacity>
                 ))}
             </ScrollView>
+
+            <Modal animationType='slide' visible={modalVisible} transparent={true}>
+                <LinkWeb
+                    link={openLink?.url}
+                    title={openLink?.name}
+                    closeModal={() => setModalVisible(false)}
+                />
+            </Modal>
         </SafeAreaView>
+        
     )
 }
 

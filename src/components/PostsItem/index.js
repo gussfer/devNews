@@ -16,7 +16,7 @@ export default function PostsItem({data}) {
             <View style={styles.header}>
                 <Image
                     style={styles.cover}
-                    source={{uri: `http://172.20.10.4:1337${data?.attributes?.cover?.data?.attributes?.url}`}}
+                    source={{uri: `http://192.168.0.15:1337${data?.attributes?.cover?.data?.attributes?.url}`}}
 
                 />
             </View>

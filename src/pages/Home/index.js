@@ -7,6 +7,9 @@ import CategoryItem from "../../components/CategoryItem"
 import PostsItem from "../../components/PostsItem"
 import FavoritePosts from "../../components/FavoritePosts" 
 import {getFavorite, setFavorite} from "../../services/favorite"
+import * as Animatable from 'react-native-animatable';
+
+const FlatListA = Animatable.createAnimatableComponent(FlatList)
 
 
 
@@ -15,7 +18,8 @@ export default function Home() {
     const nav = useNavigation();
     const [categories, setCategories] = useState([]) //armazena informações das categorias
     const [favCategory, setFavCategory] = useState([])//armazena informações das categorias favoritadas
-    const [posts, setPosts] = useState([])//armazena informações dos posts
+    const [posts, setPosts] = useState([])//armazena lista dos posts
+    const [loading, setLoading] = useState(false)
 
     
     useEffect(() => {
@@ -37,8 +41,10 @@ export default function Home() {
 
      //buscando posts
     async function getPostsList() {
+        setLoading(true)
         const response = await api.get(`api/posts?populate=cover&sort=createdAt:desc`)//ordena get pela mais recente
         setPosts(response.data.data)
+        setLoading(false)
     }
 
     //favoritando categoria
@@ -50,13 +56,15 @@ export default function Home() {
     return(
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.name}>DevNews!</Text>
+                <Animatable.Text style={styles.name} animation="bounceInDown" delay={400}>DevNews!</Animatable.Text>
                 <TouchableOpacity onPress={() => nav.navigate("Search")}>
                     <Icon name="search" style={styles.name}/>
                 </TouchableOpacity>
             </View>
             <View style={styles.categories}>
-                <FlatList
+                <FlatListA
+                    animation="flipInY"
+                    delay={400}
                     horizontal={true}
                     data={categories}
                     keyExtractor={(item) => String(item.id)}
@@ -70,7 +78,8 @@ export default function Home() {
             </View>
             <View style={styles.main}>
                 {favCategory.length !== 0 && (
-                    <FlatList 
+                    <FlatListA
+                        animation="slideInDown" 
                         style={{marginTop: 50, maxHeight: 165, paddingStart:12, borderRadius: 6}}
                         contentContainerStyle={{paddingEnd:20}}
                         data={favCategory}
@@ -89,6 +98,9 @@ export default function Home() {
                         data={posts}
                         keyExtractor={(item) => String(item.id)}
                         renderItem={({item}) => <PostsItem data={item}/>}
+                        refreshing={loading}
+                        onRefresh={() => getPostsList()}
+
                     />
             </View>                        
         </SafeAreaView>

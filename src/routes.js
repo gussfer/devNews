@@ -33,7 +33,7 @@ function Routes(){
                 name="CategoryPosts"
                 component={CategoryPosts}
                 options={{
-                    title: "Categorias",
+                    title: "Posts por categoria",
                     headerTintColor: "#9BC4CB",
                     headerStyle:{
                         backgroundColor: '#023047'
@@ -44,7 +44,7 @@ function Routes(){
                 name="Search"
                 component={Search}
                 options={{
-                    title: "Página de pesquisa",
+                    title: "Procurando algo?",
                     headerTintColor: "#9BC4CB",
                     headerStyle:{
                         backgroundColor: '#023047'
